@@ -1,0 +1,34 @@
+# MacOS specific
+.DS_Store
+**/.DS_Store
+
+# Xcode
+DerivedData/
+xcuserdata/
+.build/
+
+# Swift Package Manager
+Packages/
+Package.pins
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+
+# Fastlane
+*.zip
+*.ipa
+**/fastlane/report.xml
+*.mobileprovision
+
+# SwiftFormat and SwiftLint plugins
+config.noSwiftFormat
+config.noSwiftLint
+config.continuousIntegrationMode
+
+# ignore test reports
+TestResults
+TestResults.*
+code_coverage
+*.log
+*.vscode
+/.github/scripts/node_modules
+/node_modules
+build/
