@@ -16,18 +16,16 @@ struct WelcomeView: View {
     struct Constants {
         static let mainViewPadding: CGFloat = 20
         static let textSpace: CGFloat = 30
-        static let textTitle = "Onboarding TCA App"
-        static let buttonStart = "Start"
     }
     
     var body: some View {
         VStack(spacing: Constants.textSpace) {
-            Text(Constants.textTitle)
+            Text(Localizable.onboardingTCAApp.stringKey)
                 .bold()
                 .font(.largeTitle)
             Text(store.state.message)
                 .multilineTextAlignment(.center)
-            Button(Constants.buttonStart) {
+            Button(Localizable.start.stringKey) {
                 destination = .loginView
             }
         }

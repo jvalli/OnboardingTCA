@@ -14,15 +14,6 @@ struct RegisterView: View {
     struct Constants {
         static let mainViewPadding: CGFloat = 20
         static let textFieldSpace: CGFloat = 10
-        static let textEnterInformation = "Please enter your information"
-        static let textFieldFullName = "Full Name:"
-        static let textFieldEmail = "Email:"
-        static let textFieldPassword = "Password:"
-        static let buttonSend = "Send"
-        static let textLoading = "Loading"
-        static let textError = "Error!!!"
-        static let textUserRegistered = "User registered!!!"
-        static let textRegister = "Register"
     }
     
     var body: some View {
@@ -30,11 +21,11 @@ struct RegisterView: View {
             switch store.viewState {
             case .initial:
                 VStack(spacing: Constants.textFieldSpace) {
-                    Text(Constants.textEnterInformation)
+                    Text(Localizable.pleaseEnterYourInformation.stringKey)
                     HStack(alignment: .bottom) {
-                        Text(Constants.textFieldFullName)
-                        VStack {
-                            TextField("", text: $store.fullName)
+                        Text(Localizable.fullName.stringKey)
+                        VStack(spacing: .zero) {
+                            TextField(.empty, text: $store.fullName)
                                 .autocapitalization(.words)
                                 .keyboardType(.namePhonePad)
                                 .disableAutocorrection(true)
@@ -42,9 +33,9 @@ struct RegisterView: View {
                         }
                     }
                     HStack(alignment: .bottom) {
-                        Text(Constants.textFieldEmail)
-                        VStack {
-                            TextField("", text: $store.email)
+                        Text(Localizable.email.stringKey)
+                        VStack(spacing: .zero) {
+                            TextField(.empty, text: $store.email)
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
                                 .keyboardType(.emailAddress)
@@ -52,32 +43,32 @@ struct RegisterView: View {
                         }
                     }
                     HStack(alignment: .bottom) {
-                        Text(Constants.textFieldPassword)
-                        VStack {
-                            SecureField("", text: $store.password)
+                        Text(Localizable.password.stringKey)
+                        VStack(spacing: .zero) {
+                            SecureField(.empty, text: $store.password)
                             Divider()
                         }
                     }
-                    Button(Constants.buttonSend) {
+                    Button(Localizable.send.stringKey) {
                         store.send(.onClickSendButton)
                     }
                     Spacer()
                 }
             case .loading:
-                ProgressView(Constants.textLoading)
+                ProgressView(Localizable.loading.stringKey)
                     .progressViewStyle(.circular)
                     .tint(.accentColor)
             case .error:
-                Text(Constants.textError)
+                Text(Localizable.error.stringKey)
                     .foregroundColor(.red)
             case .registered:
-                Text(Constants.textUserRegistered)
+                Text(Localizable.userRegistered.stringKey)
                     .foregroundColor(.mint)
             }
             
         }
         .padding(Constants.mainViewPadding)
-        .navigationTitle(Text(Constants.textRegister))
+        .navigationTitle(Text(Localizable.register.stringKey))
     }
 }
 
