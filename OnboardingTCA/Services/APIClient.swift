@@ -20,8 +20,8 @@ struct APIClient: APIClientProtocol {
         static let validStatusCodes = (200...299)
         
         struct Configs {
-            static let apiUrl = ""
-            static let apiSecret = ""
+            static let apiUrl = "https://obliging-rattler-22.hasura.app/api/rest/"
+            static let apiSecret = "BshQUntvZksF2OG8A7bzDq4qoKeRj400eRPPrtfNydYj2MrEVnJOzZUrLvVxdp1d"
             static let apiCreateUser = "createuser"
         }
     }
@@ -31,10 +31,10 @@ struct APIClient: APIClientProtocol {
     }
     
     func signUp(fullName: String, email: String, password: String) async throws -> Result<User, ApiError> {
-        guard let signInUrl = baseUrl?.appending(path: Constants.Configs.apiCreateUser) else {
-            return .failure(.invalidUrl)
-        }
         do {
+            guard let signInUrl = baseUrl?.appending(path: Constants.Configs.apiCreateUser) else {
+                throw ApiError.invalidUrl
+            }
             var request = URLRequest(url: signInUrl)
             request.httpMethod = HttpMethod.post.rawValue
             request.addValue(Constants.jsonContentType, forHTTPHeaderField: HTTPHeaderKey.contentType.rawValue)
@@ -43,11 +43,11 @@ struct APIClient: APIClientProtocol {
             let jsonData = try JSONEncoder().encode(newUser)
             request.httpBody = jsonData
             let (data, response) = try await URLSession.shared.data(for: request)
-            guard let statusCode = (response as? HTTPURLResponse)?.statusCode else {
-                return .failure(.invalidStatusCode(statusCode: Constants.invalidStatusCode))
+            guard let response = response as? HTTPURLResponse else {
+                throw ApiError.invalidResponse
             }
-            guard Constants.validStatusCodes.contains(statusCode) else {
-                return .failure(.invalidStatusCode(statusCode: statusCode))
+            guard Constants.validStatusCodes.contains(response.statusCode) else {
+                throw ApiError.invalidStatusCode(statusCode: response.statusCode)
             }
             let reponse = try JSONDecoder().decode(RegisterResponse.self, from: data)
             return .success(reponse.user)

@@ -9,6 +9,7 @@ import Foundation
 
 enum ApiError: Error {
     case invalidUrl
+    case invalidResponse
     case encodingFailed(innerError: EncodingError)
     case decodingFailed(innerError: DecodingError)
     case invalidStatusCode(statusCode: Int)
