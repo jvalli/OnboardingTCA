@@ -20,8 +20,8 @@ struct APIClient: APIClientProtocol {
         static let validStatusCodes = (200...299)
         
         struct Configs {
-            static let apiUrl = "https://obliging-rattler-22.hasura.app/api/rest/"
-            static let apiSecret = "BshQUntvZksF2OG8A7bzDq4qoKeRj400eRPPrtfNydYj2MrEVnJOzZUrLvVxdp1d"
+            static let apiUrl = ""
+            static let apiSecret = ""
             static let apiCreateUser = "createuser"
         }
     }
