@@ -38,39 +38,30 @@ struct RegisterView: View {
                         .font(.custom("Helvetica Neue", size: 18))
                         .foregroundStyle(Color.indigoBlue.opacity(0.8))
                         .padding(.bottom, 20)
-                    HStack(alignment: .bottom) {
-                        Text(Localizable.fullName.stringKey)
-                            .font(.custom("Helvetica Neue", size: 18))
-                            .foregroundStyle(Color.indigoBlue.opacity(0.8))
-                        VStack(spacing: .zero) {
-                            TextField(.empty, text: $store.fullName)
-                                .autocapitalization(.words)
-                                .keyboardType(.namePhonePad)
-                                .disableAutocorrection(true)
-                            Divider()
-                        }
-                    }
-                    HStack(alignment: .bottom) {
-                        Text(Localizable.email.stringKey)
-                            .font(.custom("Helvetica Neue", size: 18))
-                            .foregroundStyle(Color.indigoBlue.opacity(0.8))
-                        VStack(spacing: .zero) {
-                            TextField(.empty, text: $store.email)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .keyboardType(.emailAddress)
-                            Divider()
-                        }
-                    }
-                    HStack(alignment: .bottom) {
-                        Text(Localizable.password.stringKey)
-                            .font(.custom("Helvetica Neue", size: 18))
-                            .foregroundStyle(Color.indigoBlue.opacity(0.8))
-                        VStack(spacing: .zero) {
-                            SecureField(.empty, text: $store.password)
-                            Divider()
-                        }
-                    }
+                    TextField(.empty, text: $store.fullName)
+                        .validationTextField(
+                            label: Localizable.fullName.stringKey,
+                            error: store.fullName.isValidName ? nil : .empty,
+                            isNotEmpty: !store.fullName.isEmpty
+                        )
+                        .autocapitalization(.words)
+                        .keyboardType(.namePhonePad)
+                        .disableAutocorrection(true)
+                    TextField(.empty, text: $store.email)
+                        .validationTextField(
+                            label: Localizable.email.stringKey,
+                            error: store.email.isValidEmail ? nil : .empty,
+                            isNotEmpty: !store.email.isEmpty
+                        )
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .keyboardType(.emailAddress)
+                    SecureField(.empty, text: $store.password)
+                        .validationTextField(
+                            label: Localizable.password.stringKey,
+                            error: store.password.isValidPassword ? nil : .empty,
+                            isNotEmpty: !store.password.isEmpty
+                        )
                     Button {
                         store.send(.onClickSendButton)
                     } label: {
