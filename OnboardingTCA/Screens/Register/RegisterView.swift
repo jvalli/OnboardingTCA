@@ -15,6 +15,9 @@ struct RegisterView: View {
     struct Constants {
         static let mainViewPadding: CGFloat = 20
         static let textFieldSpace: CGFloat = 25
+        static let iconArrowLeft: String = "arrow.left"
+        static let headlineTextColorOpacity = 0.8
+        static let headlineTextPadding: CGFloat = 20
     }
     
     init(store: StoreOf<RegisterReducer>) {
@@ -35,14 +38,14 @@ struct RegisterView: View {
             case .initial:
                 VStack(spacing: Constants.textFieldSpace) {
                     Text(Localizable.pleaseEnterYourInformation.stringKey)
-                        .font(.custom("Helvetica Neue", size: 18))
-                        .foregroundStyle(Color.indigoBlue.opacity(0.8))
-                        .padding(.bottom, 20)
+                        .font(.helveticaNeue(size: .headlineSize))
+                        .foregroundStyle(Color.indigoBlue.opacity(Constants.headlineTextColorOpacity))
+                        .padding(.bottom, Constants.headlineTextPadding)
                     TextField(.empty, text: $store.fullName)
                         .validationTextField(
                             label: Localizable.fullName.stringKey,
                             error: store.fullName.isValidName ? nil : .empty,
-                            isNotEmpty: !store.fullName.isEmpty
+                            isNotEmpty: store.fullName.isNotEmpty
                         )
                         .autocapitalization(.words)
                         .keyboardType(.namePhonePad)
@@ -51,7 +54,7 @@ struct RegisterView: View {
                         .validationTextField(
                             label: Localizable.email.stringKey,
                             error: store.email.isValidEmail ? nil : .empty,
-                            isNotEmpty: !store.email.isEmpty
+                            isNotEmpty: store.email.isNotEmpty
                         )
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
@@ -60,34 +63,15 @@ struct RegisterView: View {
                         .validationTextField(
                             label: Localizable.password.stringKey,
                             error: store.password.isValidPassword ? nil : .empty,
-                            isNotEmpty: !store.password.isEmpty
+                            isNotEmpty: store.password.isNotEmpty
                         )
-                    Button {
+                    Button(Localizable.send.stringKey) {
                         store.send(.onClickSendButton)
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 8.0, style: .continuous)
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color.indigoBlue.opacity(0.8),
-                                            Color.indigoPurple.opacity(0.8)
-                                        ]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                            Text(Localizable.send.stringKey)
-                                .frame(maxWidth: .infinity)
-                                .foregroundStyle(Color.white)
-                                .bold()
-                        }
-                        .frame(height: 50)
                     }
+                    .buttonStyle(.label)
                     .padding(.top, 20)
                     Spacer()
                 }
-                .padding(.bottom, 20)
             case .loading:
                 VStack {
                     Spacer()
@@ -134,7 +118,7 @@ struct RegisterView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Image(systemName: "arrow.left")
+                        Image(systemName: Constants.iconArrowLeft)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .foregroundStyle(Color.gray.opacity(0.5))
@@ -146,7 +130,7 @@ struct RegisterView: View {
             }
             ToolbarItem(placement: .principal) {
                 Text(Localizable.register.stringKey)
-                    .font(.custom("SF Pro Display", size: 28))
+                    .font(.sfProDisplay(size: .navTitleSize))
                     .foregroundStyle(Color.indigoPurple)
             }
         }
