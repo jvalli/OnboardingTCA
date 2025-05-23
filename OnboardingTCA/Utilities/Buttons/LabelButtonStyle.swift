@@ -1,5 +1,5 @@
 //
-//  LabelButton.swift
+//  LabelButtonStyle.swift
 //  OnboardingTCA
 //
 //  Created by Jerónimo Valli on 5/22/25.
@@ -8,19 +8,19 @@
 import SwiftUI
 
 private struct Constants {
-    static let cornerRadius: CGFloat = 8.0
-    static let bacgroundOpacity: CGFloat = 0.8
-    static let buttonHeight: CGFloat = 50.0
-    static let shadowOpacity: CGFloat = 0.4
-    static let shadowOpacityPressed: CGFloat = 0.2
-    static let shadowRadius: CGFloat = 3.0
-    static let shadowRadiusPressed: CGFloat = 1.0
-    static let offset: CGFloat = 0.0
-    static let offsetPressed: CGFloat = 1.0
-    static let scale: CGFloat = 1.0
-    static let scalePressed: CGFloat = 0.98
-    static let animationSpringResponse: CGFloat = 0.3
-    static let animationSpringDampingFraction: CGFloat = 0.5
+    static let cornerRadius = 8.0
+    static let bacgroundOpacity = 0.8
+    static let buttonHeight = 50.0
+    static let shadowOpacity = 0.4
+    static let shadowOpacityPressed = 0.2
+    static let shadowRadius = 3.0
+    static let shadowRadiusPressed = 1.0
+    static let offset = 0.0
+    static let offsetPressed = 1.0
+    static let scale = 1.0
+    static let scalePressed = 0.98
+    static let animationSpringResponse = 0.3
+    static let animationSpringDampingFraction = 0.5
 }
 
 public struct LabelButtonStyle: ButtonStyle {

@@ -13,11 +13,12 @@ struct RegisterView: View {
     @Bindable var store: StoreOf<RegisterReducer>
     
     struct Constants {
-        static let mainViewPadding: CGFloat = 20
-        static let textFieldSpace: CGFloat = 25
-        static let iconArrowLeft: String = "arrow.left"
+        static let mainViewPadding = 20.0
+        static let textFieldSpace = 25.0
         static let headlineTextColorOpacity = 0.8
-        static let headlineTextPadding: CGFloat = 20
+        static let headlineTextPadding = 20.0
+        static let buttonSendPadding = 20.0
+        static let toolbarBackgroundOpacity = 0.2
     }
     
     init(store: StoreOf<RegisterReducer>) {
@@ -69,7 +70,7 @@ struct RegisterView: View {
                         store.send(.onClickSendButton)
                     }
                     .buttonStyle(.label)
-                    .padding(.top, 20)
+                    .padding(.top, Constants.buttonSendPadding)
                     Spacer()
                 }
             case .loading:
@@ -102,31 +103,15 @@ struct RegisterView: View {
         }
         .padding(Constants.mainViewPadding)
         .background {
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color.gray.opacity(0.1),
-                    Color.gray.opacity(0.3)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            AnimatedGradientView()
         }
         .edgesIgnoringSafeArea(.bottom)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: Constants.iconArrowLeft)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .foregroundStyle(Color.gray.opacity(0.5))
-                            .frame(width: 35, height: 8)
-                            .clipped()
-                            .padding([.vertical, .trailing], 10)
-                    }
+                Button(.empty) {
+                    dismiss()
                 }
+                .buttonStyle(.backButton)
             }
             ToolbarItem(placement: .principal) {
                 Text(Localizable.register.stringKey)
@@ -137,7 +122,10 @@ struct RegisterView: View {
         .navigationBarBackButtonHidden()
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.light, for: .navigationBar)
-        .toolbarBackground(Color.gray.opacity(0.1), for: .navigationBar)
+        .toolbarBackground(
+            Color.gray.opacity(Constants.toolbarBackgroundOpacity),
+            for: .navigationBar
+        )
     }
 }
 

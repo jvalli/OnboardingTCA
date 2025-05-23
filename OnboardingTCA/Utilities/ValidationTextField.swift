@@ -8,15 +8,18 @@
 import SwiftUI
 
 private struct Constants {
-    static let iconCheck: String = "checkmark.circle.fill"
-    static let iconX: String = "x.circle.fill"
-    static let labelOpacity: CGFloat = 0.8
+    static let iconCheck = "checkmark.circle.fill"
+    static let iconX = "x.circle.fill"
+    static let labelOpacity = 0.8
 }
 
 public struct ValidationTextField: ViewModifier {
     var label: LocalizedStringKey?
     var error: String?
     var isNotEmpty: Bool
+    
+    @State private var shakeOffset = 0.0
+    @FocusState private var isFocused: Bool
     
     public func body(content: Content) -> some View {
         VStack {
@@ -29,6 +32,7 @@ public struct ValidationTextField: ViewModifier {
                 VStack(spacing: .zero) {
                     HStack {
                         content
+                            .focused($isFocused)
                         if isNotEmpty {
                             Image(systemName: error == nil ? Constants.iconCheck : Constants.iconX)
                                 .foregroundColor(error == nil ? .indigoGreen : .indigoPink)
@@ -37,6 +41,17 @@ public struct ValidationTextField: ViewModifier {
                     Divider()
                         .overlay(isNotEmpty ? error == nil ? Color.indigoGreen : Color.indigoPink : Color.indigoBlue)
                 }
+                .modifier(ShakeEffect(shakeOffset: shakeOffset))
+                .onChange(of: isFocused) { oldValue, newValue in
+                    if !newValue, newValue != oldValue, isNotEmpty, error != nil {
+                        withAnimation(.linear(duration: 0.1).repeatCount(5, autoreverses: true)) {
+                            shakeOffset = 10.0
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            shakeOffset = 0.0
+                        }
+                    }
+                }
             }
             if isNotEmpty, let error, error.isNotEmpty {
                 Text(error)
@@ -44,6 +59,19 @@ public struct ValidationTextField: ViewModifier {
                     .foregroundStyle(Color.indigoPink)
             }
         }
+    }
+}
+
+struct ShakeEffect: GeometryEffect {
+    var shakeOffset: CGFloat
+    
+    var animatableData: CGFloat {
+        get { shakeOffset }
+        set { shakeOffset = newValue }
+    }
+    
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        ProjectionTransform(CGAffineTransform(translationX: shakeOffset, y: 0))
     }
 }
 

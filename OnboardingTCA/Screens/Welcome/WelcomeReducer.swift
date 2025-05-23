@@ -13,7 +13,7 @@ struct WelcomeReducer {
     struct State: Equatable {
         var message: String
         
-        public init(message: String = "") {
+        public init(message: String = Constants.welcomeMessage) {
             self.message = message
         }
     }
@@ -30,7 +30,7 @@ struct WelcomeReducer {
         Reduce { state, action in
             switch action {
             case .viewDidAppear:
-                state.message = Constants.welcomeMessage
+                //state.message = Constants.welcomeMessage
                 return .none
             }
         }

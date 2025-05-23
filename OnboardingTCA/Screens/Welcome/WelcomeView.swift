@@ -14,9 +14,11 @@ struct WelcomeView: View {
     @State var destination: Destination?
     
     struct Constants {
-        static let mainViewPadding: CGFloat = 20
-        static let textSpace: CGFloat = 30
+        static let mainViewPadding = 20.0
+        static let textSpace = 30.0
         static let messageTextColorOpacity = 0.8
+        static let typingTextAnimationSpeed = 0.05
+        static let typingTextHeight = 60.0
     }
     
     var body: some View {
@@ -26,24 +28,22 @@ struct WelcomeView: View {
                 Text(Localizable.onboardingTCAApp.stringKey)
                     .font(.sfProDisplay(size: .titleSize))
                     .foregroundStyle(Color.indigoPurple)
-                Text(store.state.message)
-                    .font(.helveticaNeue(size: .messageSize))
-                    .multilineTextAlignment(.center)
-                    .foregroundStyle(Color.indigoBlue.opacity(Constants.messageTextColorOpacity))
+                TypingText(text: store.state.message, speed: Constants.typingTextAnimationSpeed)
+                .frame(height: Constants.typingTextHeight)
                 Button(Localizable.start.stringKey) {
                     destination = .loginView
                 }
                 .buttonStyle(.label)
             }
             .padding(Constants.mainViewPadding)
-            .onAppear {
-                store.send(.viewDidAppear)
-            }
-            .navigationDestination(item: $destination.loginView) {_ in
-                RegisterView(store: .init(initialState: RegisterReducer.State()) {
-                    RegisterReducer()
-                })
-            }
+        }
+        .onAppear {
+            store.send(.viewDidAppear)
+        }
+        .navigationDestination(item: $destination.loginView) {_ in
+            RegisterView(store: .init(initialState: RegisterReducer.State()) {
+                RegisterReducer()
+            })
         }
         .ignoresSafeArea(.all)
     }
