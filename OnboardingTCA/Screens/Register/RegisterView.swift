@@ -17,8 +17,11 @@ struct RegisterView: View {
         static let textFieldSpace = 25.0
         static let headlineTextColorOpacity = 0.8
         static let headlineTextPadding = 20.0
-        static let buttonSendPadding = 20.0
+        static let buttonPaddingTop = 20.0
         static let toolbarBackgroundOpacity = 0.2
+        static let errorTitleSpace = 30.0
+        static let errorLabelSpace = 10.0
+        static let iconRepeat = "repeat.circle"
     }
     
     init(store: StoreOf<RegisterReducer>) {
@@ -45,7 +48,7 @@ struct RegisterView: View {
                     TextField(.empty, text: $store.fullName)
                         .validationTextField(
                             label: Localizable.fullName.stringKey,
-                            error: store.fullName.isValidName ? nil : .empty,
+                            error: store.fullName.isValidName ? nil : store.errorFullName,
                             isNotEmpty: store.fullName.isNotEmpty
                         )
                         .autocapitalization(.words)
@@ -54,7 +57,7 @@ struct RegisterView: View {
                     TextField(.empty, text: $store.email)
                         .validationTextField(
                             label: Localizable.email.stringKey,
-                            error: store.email.isValidEmail ? nil : .empty,
+                            error: store.email.isValidEmail ? nil : store.errorEmail,
                             isNotEmpty: store.email.isNotEmpty
                         )
                         .autocapitalization(.none)
@@ -63,14 +66,14 @@ struct RegisterView: View {
                     SecureField(.empty, text: $store.password)
                         .validationTextField(
                             label: Localizable.password.stringKey,
-                            error: store.password.isValidPassword ? nil : .empty,
+                            error: store.password.isValidPassword ? nil : store.errorPassword,
                             isNotEmpty: store.password.isNotEmpty
                         )
                     Button(Localizable.send.stringKey) {
                         store.send(.onClickSendButton)
                     }
                     .buttonStyle(.label)
-                    .padding(.top, Constants.buttonSendPadding)
+                    .padding(.top, Constants.buttonPaddingTop)
                     Spacer()
                 }
             case .loading:
@@ -83,19 +86,47 @@ struct RegisterView: View {
                     Spacer()
                 }
             case .error:
-                VStack {
-                    Spacer()
+                VStack(spacing: Constants.errorLabelSpace) {
                     Text(Localizable.error.stringKey)
-                        .foregroundColor(.red)
+                        .foregroundColor(Color.indigoPink)
+                        .font(.sfProDisplay(size: .titleSize))
                         .frame(maxWidth: .infinity)
+                        .padding(.bottom, Constants.errorTitleSpace)
+                    if let errorFullName = store.errorFullName {
+                        Text(errorFullName)
+                            .foregroundColor(Color.indigoPink)
+                    }
+                    if let errorEmail = store.errorEmail {
+                        Text(errorEmail)
+                            .foregroundColor(Color.indigoPink)
+                    }
+                    if let errorPassword = store.errorPassword {
+                        Text(errorPassword)
+                            .foregroundColor(Color.indigoPink)
+                    }
+                    Button {
+                        store.send(.onClickTryAgainButton)
+                    } label: {
+                        Image(systemName: Constants.iconRepeat)
+                            .symbolEffect(.pulse)
+                            .symbolEffect(.scale.up)
+                            .foregroundStyle(Color.indigoPink)
+                            .font(.system(size: .titleSize))
+                    }
                     Spacer()
                 }
             case .registered:
                 VStack {
                     Spacer()
                     Text(Localizable.userRegistered.stringKey)
-                        .foregroundColor(.mint)
+                        .foregroundColor(Color.indigoPurple)
+                        .font(.sfProDisplay(size: .titleSize))
                         .frame(maxWidth: .infinity)
+                    Button(Localizable.continueButton.stringKey) {
+                        store.send(.onClickContinueButton)
+                    }
+                    .buttonStyle(.label)
+                    .padding(.top, Constants.buttonPaddingTop)
                     Spacer()
                 }
             }

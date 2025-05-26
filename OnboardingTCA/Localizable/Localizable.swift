@@ -21,6 +21,7 @@ enum Localizable: String {
     case error
     case userRegistered = "user_registered"
     case register
+    case continueButton = "continue"
 }
 
 extension Localizable {

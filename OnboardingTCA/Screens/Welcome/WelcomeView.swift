@@ -9,9 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct WelcomeView: View {
-    let store: StoreOf<WelcomeReducer>
-    
-    @State var destination: Destination?
+    @Bindable var store: StoreOf<WelcomeReducer>
     
     struct Constants {
         static let mainViewPadding = 20.0
@@ -28,10 +26,10 @@ struct WelcomeView: View {
                 Text(Localizable.onboardingTCAApp.stringKey)
                     .font(.sfProDisplay(size: .titleSize))
                     .foregroundStyle(Color.indigoPurple)
-                TypingText(text: store.state.message, speed: Constants.typingTextAnimationSpeed)
+                TypingText(text: store.message, speed: Constants.typingTextAnimationSpeed)
                 .frame(height: Constants.typingTextHeight)
                 Button(Localizable.start.stringKey) {
-                    destination = .loginView
+                    store.send(.onClickStartButton)
                 }
                 .buttonStyle(.label)
             }
@@ -40,18 +38,14 @@ struct WelcomeView: View {
         .onAppear {
             store.send(.viewDidAppear)
         }
-        .navigationDestination(item: $destination.loginView) {_ in
-            RegisterView(store: .init(initialState: RegisterReducer.State()) {
-                RegisterReducer()
-            })
+        .navigationDestination(item: $store.scope(
+            state: \.destination?.showRegisterView,
+            action: \.destination.showRegisterView
+        )) { store in
+            RegisterView(store: store)
         }
         .ignoresSafeArea(.all)
     }
-}
-
-@CasePathable
-enum Destination {
-    case loginView
 }
 
 #Preview {

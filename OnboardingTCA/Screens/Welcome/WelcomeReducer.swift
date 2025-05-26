@@ -5,6 +5,7 @@
 //  Created by Jerónimo Valli on 4/21/25.
 //
 
+import Foundation
 import ComposableArchitecture
 
 @Reducer
@@ -12,6 +13,8 @@ struct WelcomeReducer {
     @ObservableState
     struct State: Equatable {
         var message: String
+        @Presents
+        var destination: Destination.State?
         
         public init(message: String = Constants.welcomeMessage) {
             self.message = message
@@ -20,6 +23,13 @@ struct WelcomeReducer {
     
     enum Action {
         case viewDidAppear
+        case onClickStartButton
+        case destination(PresentationAction<Destination.Action>)
+    }
+    
+    @Reducer(state: .equatable)
+    enum Destination {
+        case showRegisterView(RegisterReducer)
     }
     
     struct Constants {
@@ -30,9 +40,13 @@ struct WelcomeReducer {
         Reduce { state, action in
             switch action {
             case .viewDidAppear:
-                //state.message = Constants.welcomeMessage
+                return .none
+            case .onClickStartButton:
+                state.destination = .showRegisterView(RegisterReducer.State())
+                return .none
+            case .destination:
                 return .none
             }
-        }
+        }.ifLet(\.$destination, action: \.destination)
     }
 }

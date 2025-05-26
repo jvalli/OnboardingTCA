@@ -24,6 +24,9 @@ struct RegisterReducer {
         var fullName: String
         var email: String
         var password: String
+        var errorFullName: String? = .empty
+        var errorEmail: String? = .empty
+        var errorPassword: String? = .empty
         
         public init(fullName: String = "", email: String = "", password: String = "") {
             self.fullName = fullName
@@ -37,6 +40,8 @@ struct RegisterReducer {
         case binding(BindingAction<State>)
         case onClickSendButton
         case onApiClientResponse(Result<User, ApiError>)
+        case onClickTryAgainButton
+        case onClickContinueButton
     }
     
     private enum CancelID {
@@ -48,24 +53,27 @@ struct RegisterReducer {
         Reduce { state, action in
             switch action {
             case .binding(\.fullName):
-                // TODO: validate `fullName` format
+                let validName = state.fullName.isNotEmpty && state.fullName.isValidName
+                state.errorFullName = !validName ? "Please enter a valid name." : nil
                 return .none
             case .binding(\.email):
-                // TODO: validate `email` format
+                let validEmail = state.email.isNotEmpty && state.email.isValidEmail
+                state.errorEmail = !validEmail ? "Please enter a valid email." : nil
                 return .none
             case .binding(\.password):
-                // TODO: validate `password` format
+                let validPassword = state.password.isNotEmpty && state.password.isValidPassword
+                state.errorPassword = !validPassword ? "Please enter a valid password." : nil
                 return .none
             case .binding:
                 return .none
             case .onClickSendButton:
-                let fullName = state.fullName
-                let email = state.email
-                let password = state.password
-                guard !fullName.isEmpty, !email.isEmpty, !password.isEmpty else {
+                guard state.errorFullName == nil, state.errorEmail == nil, state.errorPassword == nil else {
                     state.viewState = .error
                     return .none
                 }
+                let fullName = state.fullName
+                let email = state.email
+                let password = state.password
                 state.viewState = .loading
                 return .run { send in
                     let result = try await apiClient.signUp(fullName: fullName, email: email, password: password)
@@ -74,13 +82,17 @@ struct RegisterReducer {
                 .cancellable(id: CancelID.signUpRequest)
             case let .onApiClientResponse(result):
                 switch result {
-                case let .success(user):
-                    print(user)
+                case .success(_):
                     state.viewState = .registered
                 case let .failure(error):
-                    print(error)
+                    state.errorFullName = error.localizedDescription
                     state.viewState = .error
                 }
+                return .none
+            case .onClickTryAgainButton:
+                state.viewState = .initial
+                return .none
+            case .onClickContinueButton:
                 return .none
             }
         }

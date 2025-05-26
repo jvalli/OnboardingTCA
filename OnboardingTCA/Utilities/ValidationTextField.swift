@@ -22,16 +22,19 @@ public struct ValidationTextField: ViewModifier {
     @FocusState private var isFocused: Bool
     
     public func body(content: Content) -> some View {
-        VStack {
+        VStack(alignment: .leading) {
             HStack(alignment: .bottom) {
                 if let label {
                     Text(label)
                         .font(.helveticaNeue(size: .labelTextFieldSize))
                         .foregroundStyle(Color.indigoBlue.opacity(Constants.labelOpacity))
+                        .bold()
                 }
                 VStack(spacing: .zero) {
                     HStack {
                         content
+                            .foregroundStyle(Color.indigoBlue)
+                            .accentColor(Color.indigoBlue)
                             .focused($isFocused)
                         if isNotEmpty {
                             Image(systemName: error == nil ? Constants.iconCheck : Constants.iconX)
