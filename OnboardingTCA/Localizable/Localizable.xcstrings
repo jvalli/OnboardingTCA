@@ -45,6 +45,20 @@
         }
       }
     },
+    "home" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Home" : {
+
+    },
     "loading" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -110,6 +124,20 @@
           }
         }
       }
+    },
+    "settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Settings" : {
+
     },
     "start" : {
       "extractionState" : "manual",

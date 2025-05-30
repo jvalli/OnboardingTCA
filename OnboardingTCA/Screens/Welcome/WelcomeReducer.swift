@@ -13,8 +13,7 @@ struct WelcomeReducer {
     @ObservableState
     struct State: Equatable {
         var message: String
-        @Presents
-        var destination: Destination.State?
+        @Presents var destination: Destination.State?
         
         public init(message: String = Constants.welcomeMessage) {
             self.message = message

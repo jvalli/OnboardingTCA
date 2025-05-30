@@ -12,11 +12,9 @@ import SwiftUI
 struct OnboardingTCAApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                WelcomeView(store: Store(initialState: WelcomeReducer.State()) {
-                    WelcomeReducer()
-                })
-            }
+            RootView(store: Store(initialState: RootReducer.State()) {
+                RootReducer()
+            })
         }
     }
 }

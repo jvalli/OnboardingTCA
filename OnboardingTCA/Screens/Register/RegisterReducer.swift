@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import SwiftUI
 
 @Reducer
 struct RegisterReducer {
@@ -27,8 +28,9 @@ struct RegisterReducer {
         var errorFullName: String? = .empty
         var errorEmail: String? = .empty
         var errorPassword: String? = .empty
+        @Shared(.appStorage(AppSettings.currentAppView.rawValue)) var currentAppView: AppView = .onboarding
         
-        public init(fullName: String = "", email: String = "", password: String = "") {
+        public init(fullName: String = .empty, email: String = .empty, password: String = .empty) {
             self.fullName = fullName
             self.email = email
             self.password = password
@@ -93,6 +95,7 @@ struct RegisterReducer {
                 state.viewState = .initial
                 return .none
             case .onClickContinueButton:
+                state.$currentAppView.withLock { $0 = .main }
                 return .none
             }
         }
